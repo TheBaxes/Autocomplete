@@ -6,8 +6,8 @@
 package autocompleter;
 
 /**
- *
- * @author Baxes
+ * @author Sebastián Patiño Barrientos
+ * @author Luis Miguel Arroyave Quiñones
  */
 public class SortTree {
 
@@ -38,10 +38,18 @@ public class SortTree {
         }
     }
 
+    /**
+     * Constructor for the SortTree class
+     */
     public SortTree(){
         root = null;
     }
 
+    /**
+     * This method inserts a word in the tree
+     * @param word the word that we want to add
+     * @param weight the weight of the word
+     */
     public void add(String word, int weight){
         root = add(word, weight, root);
     }

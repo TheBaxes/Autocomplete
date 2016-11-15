@@ -11,14 +11,19 @@ import java.io.FileNotFoundException;
 import java.util.Scanner;
 
 /**
- *
- * @author Baxes
+ * @author Sebastián Patiño Barrientos
+ * @author Luis Miguel Arroyave Quiñones
  */
 public class Autocompleter {
 
     TST dictionary;
     PhoneticTST phonetic;
 
+    /**
+     * This method reads a .txt file and inserts the words in the calls the
+     * methods addWord from the classes TST and PhoneticTST
+     * @param dir The direction of the file including its name and extension
+     */
     public void readFile(String dir){
         try{
             Scanner reader = new Scanner(new File(dir));
@@ -32,21 +37,40 @@ public class Autocompleter {
         }
     }
     
+    /**
+     * This method inicializates the data structures TST and PhoneticTST and
+     * calls the method readFile
+     */
     public Autocompleter() {
         dictionary = new TST();
         phonetic = new PhoneticTST();
         readFile("words.txt");
     }
     
+    /**
+     * This method returns a list of words that starts with the given string 
+     * @param word The word that will be used to get the list of words 
+     * @return A list of words as a String
+     */
     public String autocomplete(String word) {
         return dictionary.autocomplete(word);
     }
     
+    /**
+     * This method receives a String called word and returns a String with a
+     * list of words sorted alphabetically with word as a phonetical filter.
+     * @param word The word that we want to use as a phonetical filter.
+     * @return a list of words as a String
+     */
     public String search(String word) {
         dictionary.modifySearch(word);
         return phonetic.search(word);
     }
     
+    /**
+     * This method looks for a word in the TST
+     * @param word the wanted word
+     */
     public void modifySearch(String word) {
         dictionary.modifySearch(word);
     }
