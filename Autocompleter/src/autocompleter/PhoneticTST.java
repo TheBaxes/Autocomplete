@@ -5,58 +5,44 @@
  */
 package autocompleter;
 
+import codec.language.DoubleMetaphone;
+import java.util.Scanner;
+
 /**
  *
  * @author Baxes
  */
 public class PhoneticTST {
-
-    /**
-     * Root of the TST data structure
-     */
+    /** Root of the TST data structure */
     Node root;
+    DoubleMetaphone sound;
 
     /**
      * Definition of the node class that will be used in this data structure
      */
     private class Node {
 
-        /**
-         * The character that will be contained in this node
-         */
+        /** The character that will be contained in this node */
         char letter;
 
-        /**
-         * Maximum weight of a word in this path
-         */
-        int max;
+        /** If this is also an end node, this is the weight of the selected word */
+        List words;
 
-        /**
-         * If this is also an end node, this is the weight of the selected word
-         */
-        int weight;
-
-        /**
-         * Children of this node
-         */
+        /** Children of this node */
         Node left;
         Node middle;
         Node right;
 
-        /**
-         * Depth of this node for balancing it
-         */
+        /** Depth of this node for balancing it */
         int depth;
 
         /**
          * Constructor for the Node class
-         *
          * @param letter The character that will be asigned to this node
          */
         public Node(char letter){
             this.letter = letter;
-            max = 0;
-            weight = -1;
+            words = null;
 
             left = null;
             middle = null;
@@ -68,31 +54,34 @@ public class PhoneticTST {
 
     public PhoneticTST(){
         root = null;
+        sound = new DoubleMetaphone();
     }
 
     public void addWord(String word){
-        root = addWord(word, root);
+        String code = sound.doubleMetaphone(word);
+        if (code != null) root = addWord(code, root, word);
     }
 
-    private Node addWord(String word, Node node){
-        if (!word.equals("")){
+    private Node addWord(String code, Node node, String word){
+        if (!code.equals("")){
 
-            char letter = word.charAt(0);
+            char letter = code.charAt(0);
 
             if (node == null){
                 node = new Node(letter);
             }
 
             if (letter == node.letter){
-                node.middle = addWord(word.substring(1), node.middle);
-                if (node.middle == null) {
-                    node.weight = 0;
+                node.middle = addWord(code.substring(1), node.middle, word);
+                if (code.length() == 1) {
+                    if (node.words == null) node.words = new List();
+                    node.words.add(word);
                 }
             } else {
                 if (letter > node.letter) {
-                    node.right = addWord(word, node.right);
+                    node.right = addWord(code, node.right, word);
                 } else {
-                    node.left = addWord(word, node.left);
+                    node.left = addWord(code, node.left, word);
                 }
 
                 int diff = getLeftDepth(node) - getRightDepth(node);
@@ -159,99 +148,52 @@ public class PhoneticTST {
         return pivot;
     }
 
-    public String autocomplete(String word){
-        return autocomplete(word, "", root);
+    public String search(String word){
+        String code = sound.doubleMetaphone(word);
+        int max = (code.length() <= 2)? 1: 2;
+        Scanner read = new Scanner(search(code, root, word, 0, max));
+        TST order = new TST();
+        while (read.hasNextLine()) {
+            order.addWord(read.nextLine());
+        }
+        return order.toString();
     }
 
-    private String autocomplete(String word, String back, Node node){
-        if (node == null) {
-            return "";
-        }
-
-        if (word.length() < 1){
-            StringBuilder text = new StringBuilder();
-            text.append(autocomplete("", back, node.left));
-            if (node.weight > -1) {
-                text.append(back + node.letter + "\n");
+    private String search(String code, Node node, String word, int edits, int max){
+        String words = "";
+        
+        if (edits <= max) {
+            if (node.left != null) {
+                words += search(code, node.left, word, edits, max);
             }
-            text.append(autocomplete("", back + node.letter, node.middle));
-            text.append(autocomplete("", back, node.right));
-            return text.toString();
-        }
 
-        char letter = word.charAt(0);
+            char letter = code.charAt(0);
 
-        if (letter == node.letter){
-            String extra = "";
-            if (word.length() == 1 && node.weight > -1) {
-                extra = back + letter + "\n";
+            int add = (node.letter != letter) ? 1 : 0;
+
+            if (code.length() == 1){
+                if (edits + add <= max && node.words != null){
+                    words += node.words.getListWithout(word);
+                }
+            } else if (node.middle != null) {
+                words += search(code.substring(1), node.middle, word, edits + add, max);
             }
-            return extra + autocomplete(word.substring(1), back + letter, node.middle);
-        } else if (letter > node.letter) {
-            return autocomplete(word, back, node.right);
-        }
 
-        return autocomplete(word, back, node.left);
-    }
-
-    public void modifySearch(String word){
-        modifySearch(word, root);
-    }
-
-    private int modifySearch(String word, Node node){
-        int letter = word.charAt(0);
-
-        if (word.length() == 1){
-            if (node.letter == letter && node.weight > -1){
-                node.weight++;
-                return node.max = Math.max(node.max, node.weight);
+            if (node.right != null) {
+                words += search(code, node.right, word, edits, max);
             }
-            return 0;
         }
-
-        if (letter == node.letter) {
-            node.max = Math.max(node.max, modifySearch(word.substring(1), node.middle));
-        } else if (letter > node.letter) {
-            node.max = Math.max(node.max, modifySearch(word.substring(1), node.right));
-        } else {
-            node.max = Math.max(node.max, modifySearch(word.substring(1), node.left));
-        }
-
-        return node.max;
-    }
-
-    private int calcMaxWeight(Node node){
-        int l = (node.left == null) ? 0 : node.left.max;
-        int m = (node.middle == null) ? 0 : node.middle.max;
-        int r = (node.right == null) ? 0 : node.right.max;
-        return Math.max(Math.max(l, m), r);
+        return words;
     }
 
     public static void main(String[] args){
         PhoneticTST test = new PhoneticTST();
-        test.addWord("pew");
-        test.addWord("lol");
-        test.addWord("ola");
-        test.addWord("asdf");
-        test.addWord("baka");
-        test.addWord("lolrus");
-        test.addWord("lolpew");
-        test.addWord("pewwep");
-        test.addWord("asdfghjkl");
-        test.addWord("alo");
-        test.addWord("alo polisia");
-        test.addWord("baka baka baka");
-        test.addWord("notice");
-        test.addWord("notice me senpai");
-        test.addWord("ola kp2");
-        test.addWord("potato");
-        test.addWord("pepe");
-        test.addWord("piu");
-        test.addWord("");
-        test.addWord("plop");
-        test.addWord("patata");
-        test.addWord("ploafmoasdflweia");
-
-        System.out.println(test.autocomplete("p"));
+        test.addWord("mouse");
+        test.addWord("house");
+        test.addWord("trouse");
+        test.addWord("blouse");
+        test.addWord("grouse");
+        test.addWord("rouse");
+        System.out.println(test.search("mouse"));
     }
 }

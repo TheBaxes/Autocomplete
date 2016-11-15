@@ -85,7 +85,7 @@ public class TST {
 
             if (letter == node.letter){
                 node.middle = addWord(word.substring(1), node.middle);
-                if (node.middle == null) {
+                if (word.length() == 1) {
                     node.weight = 0;
                 }
             } else {
@@ -212,9 +212,9 @@ public class TST {
         if (letter == node.letter) {
             node.max = Math.max(node.max, modifySearch(word.substring(1), node.middle));
         } else if (letter > node.letter) {
-            node.max = Math.max(node.max, modifySearch(word.substring(1), node.right));
+            node.max = Math.max(node.max, modifySearch(word, node.right));
         } else {
-            node.max = Math.max(node.max, modifySearch(word.substring(1), node.left));
+            node.max = Math.max(node.max, modifySearch(word, node.left));
         }
 
         return node.max;
@@ -226,7 +226,28 @@ public class TST {
         int r = (node.right == null) ? 0 : node.right.max;
         return Math.max(Math.max(l, m), r);
     }
+   
+    public String toString() {
+        return toString(root, "");
+    }
 
+    private String toString(Node node, String back) {
+        String words = "";
+
+        if (node.left != null){
+            words += toString(node.left, back);
+        }
+        
+        if (node.weight > -1) words += back + "\n";
+        if (node.middle != null){
+            words += toString(node.middle, back + node.letter);
+        }
+
+        if (node.right != null){
+            words += toString(node.right, back);
+        }
+        return words;
+    }
     public static void main(String[] args){
         TST test = new TST();
         test.addWord("pew");
