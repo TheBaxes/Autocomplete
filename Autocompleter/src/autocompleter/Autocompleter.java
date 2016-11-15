@@ -16,10 +16,10 @@ import java.util.Scanner;
  */
 public class Autocompleter {
 
-    static TST dictionary;
-    static PhoneticTST phonetic;
+    TST dictionary;
+    PhoneticTST phonetic;
 
-    public static void readFile(String dir){
+    public void readFile(String dir){
         try{
             Scanner reader = new Scanner(new File(dir));
             while (reader.hasNextLine()) {
@@ -31,25 +31,44 @@ public class Autocompleter {
             System.out.println(ex);
         }
     }
+    
+    public Autocompleter() {
+        dictionary = new TST();
+        phonetic = new PhoneticTST();
+        readFile("words.txt");
+    }
+    
+    public String autocomplete(String word) {
+        return dictionary.autocomplete(word);
+    }
+    
+    public String search(String word) {
+        dictionary.modifySearch(word);
+        return phonetic.search(word);
+    }
+    
+    public void modifySearch(String word) {
+        dictionary.modifySearch(word);
+    }
 
     /**
      * @param args the command line arguments
      */
     public static void main(String[] args){
-        dictionary = new TST();
-        phonetic = new PhoneticTST();
-        readFile("words.txt");
-        long start = System.currentTimeMillis();
-        String pew = dictionary.autocomplete("mouse");
-        long end = System.currentTimeMillis();
-        long time1 = end - start;
-        //System.out.println(pew);
-        dictionary.modifySearch("mouseweb");
-        start = System.currentTimeMillis();
-        pew = dictionary.autocomplete("mouse");
-        //pew = phonetic.search("mouse");
-        end = System.currentTimeMillis();
-        System.out.println(pew + "time: " + time1 + " " + (end - start));
+//        dictionary = new TST();
+//        phonetic = new PhoneticTST();
+//        readFile("words.txt");
+//        long start = System.currentTimeMillis();
+//        String pew = dictionary.autocomplete("mouse");
+//        long end = System.currentTimeMillis();
+//        long time1 = end - start;
+//        //System.out.println(pew);
+//        dictionary.modifySearch("mouseweb");
+//        start = System.currentTimeMillis();
+//        pew = dictionary.autocomplete("mouse");
+//        //pew = phonetic.search("mouse");
+//        end = System.currentTimeMillis();
+//        System.out.println(pew + "time: " + time1 + " " + (end - start));
     }
 
 }

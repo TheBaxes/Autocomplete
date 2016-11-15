@@ -25,12 +25,7 @@ public class TST {
          * The character that will be contained in this node
          */
         char letter;
-
-        /**
-         * Maximum weight of a word in this path
-         */
-        int max;
-
+        
         /**
          * If this is also an end node, this is the weight of the selected word
          */
@@ -55,7 +50,6 @@ public class TST {
          */
         public Node(char letter){
             this.letter = letter;
-            max = 0;
             weight = -1;
 
             left = null;
@@ -174,7 +168,6 @@ public class TST {
         }
 
         if (word.length() < 1){
-            StringBuilder text = new StringBuilder();
             autocomplete("", back, node.left, list);
             if (node.weight > -1){
                 list.add(back + node.letter, node.weight);
@@ -202,33 +195,23 @@ public class TST {
         modifySearch(word, root);
     }
 
-    private int modifySearch(String word, Node node){
+    private void modifySearch(String word, Node node){
+        if (node == null) return;
         int letter = word.charAt(0);
 
-        if (word.length() == 1){
-            if (node.letter == letter && node.weight > -1){
-                node.weight++;
-                return node.max = Math.max(node.max, node.weight);
-            }
-            return 0;
-        }
-
         if (letter == node.letter){
-            node.max = Math.max(node.max, modifySearch(word.substring(1), node.middle));
+            if (word.length() == 1){
+                if (node.letter == letter && node.weight > -1){
+                    node.weight++;
+                }
+                return;
+            }
+            modifySearch(word.substring(1), node.middle);
         } else if (letter > node.letter){
-            node.max = Math.max(node.max, modifySearch(word, node.right));
+            modifySearch(word, node.right);
         } else {
-            node.max = Math.max(node.max, modifySearch(word, node.left));
+            modifySearch(word, node.left);
         }
-
-        return node.max;
-    }
-
-    private int calcMaxWeight(Node node){
-        int l = (node.left == null) ? 0 : node.left.max;
-        int m = (node.middle == null) ? 0 : node.middle.max;
-        int r = (node.right == null) ? 0 : node.right.max;
-        return Math.max(Math.max(l, m), r);
     }
 
     public String toString(){
@@ -280,7 +263,7 @@ public class TST {
         test.addWord("patata");
         test.addWord("ploafmoasdflweia");
 
-        test.modifySearch("potato");
+        test.modifySearch("pew");
         test.modifySearch("piu");
         test.modifySearch("potato");
         System.out.println(test.autocomplete("p"));
