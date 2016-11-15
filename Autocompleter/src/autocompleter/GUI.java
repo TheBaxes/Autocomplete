@@ -207,7 +207,8 @@ public class GUI extends javax.swing.JFrame {
             jList1.requestFocus();
             jList1.setSelectedIndex(-1);
         }
-        if (jTextField1.getText().length() > 0){
+        String text = jTextField1.getText();
+        if (text.length() > 0 && text.charAt(text.length()-1) != ' '){
             jList1.setVisible(true);
             if (jCheckBox1.isSelected()){
                 if (java.awt.event.KeyEvent.VK_ENTER == keyCode) {
@@ -229,16 +230,25 @@ public class GUI extends javax.swing.JFrame {
             jTextField1.requestFocus();
         } else if (java.awt.event.KeyEvent.VK_ENTER == keyCode){
             String selected = jList1.getSelectedValue();
+            if (selected == null) return;
             autocompleter.modifySearch(selected);
-            jTextField1.setText(selected);
+            String text = jTextField1.getText();
+            int i = text.length()-1;
+            while (i >= 0 && text.charAt(i) != ' '){
+                i--;
+            }
+            text = text.substring(0, i + 1);
+            jTextField1.setText(text + selected);
             jTextField1.requestFocus();
+            jList1.setSelectedIndex(0);
+            jList1.setModel(new DefaultListModel<>());
         }
 
         up = jList1.getSelectedIndex() == 0;
     }//GEN-LAST:event_jList1KeyReleased
 
     private void jTextField1FocusGained(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_jTextField1FocusGained
-        if (!jCheckBox1.isSelected()) search();
+        
     }//GEN-LAST:event_jTextField1FocusGained
 
     private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
@@ -252,9 +262,20 @@ public class GUI extends javax.swing.JFrame {
     private void jList1MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jList1MouseClicked
         if (jCheckBox1.isSelected()) return;
         String selected = jList1.getSelectedValue();
+        if (selected == null) {
+            return;
+        }
         autocompleter.modifySearch(selected);
-        jTextField1.setText(selected);
+        String text = jTextField1.getText();
+        int i = text.length() - 1;
+        while (i >= 0 && text.charAt(i) != ' ') {
+            i--;
+        }
+        text = text.substring(0, i + 1);
+        jTextField1.setText(text + selected);
         jTextField1.requestFocus();
+        jList1.setSelectedIndex(0);
+        jList1.setModel(new DefaultListModel<>());
     }//GEN-LAST:event_jList1MouseClicked
 
     private void jTextField1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jTextField1ActionPerformed
@@ -271,8 +292,14 @@ public class GUI extends javax.swing.JFrame {
             end = System.currentTimeMillis();
 
         } else {
+            String text = jTextField1.getText().toLowerCase();
+            String last = "";
+            Scanner reader = new Scanner(text);
+            while (reader.hasNext()) {
+                last = reader.next();
+            }
             start = System.currentTimeMillis();
-            result = autocompleter.autocomplete(jTextField1.getText().toLowerCase());
+            result = autocompleter.autocomplete(last);
             end = System.currentTimeMillis();
         }
         DefaultListModel list = new DefaultListModel();
