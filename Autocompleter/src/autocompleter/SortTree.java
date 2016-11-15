@@ -6,6 +6,7 @@
 package autocompleter;
 
 /**
+ * A tree with a list on each node for storing words with same weight
  * @author Sebastián Patiño Barrientos
  * @author Luis Miguel Arroyave Quiñones
  */
@@ -70,6 +71,7 @@ public class SortTree {
         return node;
     }
 
+    @Override
     public String toString(){
         return toString(root);
     }

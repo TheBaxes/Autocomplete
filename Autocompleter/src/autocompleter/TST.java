@@ -6,7 +6,7 @@
 package autocompleter;
 
 /**
- * TST data structure for finding words in a list
+ * TST with AVL hybrid data structure for finding words in a list
  * @author Sebastián Patiño Barrientos
  * @author Luis Miguel Arroyave Quiñones
  */
@@ -69,7 +69,7 @@ public class TST {
     }
     
     /**
-     * This method nserts a word to the dictionary
+     * This method inserts a word to the dictionary
      * @param word The word that will be added to the dictionary
      */
     public void addWord(String word){
@@ -231,6 +231,7 @@ public class TST {
         }
     }
 
+    @Override
     public String toString(){
         return toString(root, "");
     }

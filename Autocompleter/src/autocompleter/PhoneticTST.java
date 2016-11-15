@@ -9,6 +9,7 @@ import codec.language.Metaphone;
 import java.util.Scanner;
 
 /**
+ * TST and AVL hybrid modified for storing phonetic encodings with respective words
  * @author Sebastián Patiño Barrientos
  * @author Luis Miguel Arroyave Quiñones
  */
@@ -73,7 +74,7 @@ public class PhoneticTST {
     }
 
     /**
-     * This method nserts a word to the dictionary
+     * This method inserts a word to the dictionary
      * @param word The word that will be added to the dictionary
      */
     public void addWord(String word){

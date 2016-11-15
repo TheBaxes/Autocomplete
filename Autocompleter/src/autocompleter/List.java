@@ -6,6 +6,7 @@
 package autocompleter;
 
 /**
+ * List data structure
  * @author Sebastián Patiño Barrientos
  * @author Luis Miguel Arroyave Quiñones
  */
@@ -42,7 +43,8 @@ public class List {
     }
 
     /**
-     * This method returns a list of words without an specific word
+     * This method returns a list of words without an specific word (if it appears
+     * inside this list)
      * @param word The word that we don't want to be on the list
      * @return A list of words
      */

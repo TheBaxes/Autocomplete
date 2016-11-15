@@ -5,12 +5,12 @@
  */
 package autocompleter;
 
-import codec.language.DoubleMetaphone;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.util.Scanner;
 
 /**
+ * Main class for autocompleter
  * @author Sebastián Patiño Barrientos
  * @author Luis Miguel Arroyave Quiñones
  */
@@ -20,7 +20,7 @@ public class Autocompleter {
     PhoneticTST phonetic;
 
     /**
-     * This method reads a .txt file and inserts the words in the calls the
+     * This method reads a .txt file and then calls the
      * methods addWord from the classes TST and PhoneticTST
      * @param dir The direction of the file including its name and extension
      */
@@ -57,8 +57,8 @@ public class Autocompleter {
     }
     
     /**
-     * This method receives a String called word and returns a String with a
-     * list of words sorted alphabetically with word as a phonetical filter.
+     * This method receives a String and returns a String with a
+     * list of words sorted alphabetically with a word as a phonetical filter.
      * @param word The word that we want to use as a phonetical filter.
      * @return a list of words as a String
      */
