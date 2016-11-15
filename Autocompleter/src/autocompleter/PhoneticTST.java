@@ -9,8 +9,8 @@ import codec.language.Metaphone;
 import java.util.Scanner;
 
 /**
- *
- * @author Baxes
+ * @author Sebastián Patiño Barrientos
+ * @author Luis Miguel Arroyave Quiñones
  */
 public class PhoneticTST {
 
@@ -63,12 +63,19 @@ public class PhoneticTST {
             depth = 1;
         }
     }
-
+    
+    /**
+     * Constructor for the PhoneticTST class
+     */
     public PhoneticTST(){
         root = null;
         sound = new Metaphone();
     }
 
+    /**
+     * This method nserts a word to the dictionary
+     * @param word The word that will be added to the dictionary
+     */
     public void addWord(String word){
         String code = sound.metaphone(word);
         if (code != null) {
@@ -164,6 +171,12 @@ public class PhoneticTST {
         return pivot;
     }
 
+    /**
+     * This method receives a String called word and returns a String with a
+     * list of words sorted alphabetically with word as a phonetical filter.
+     * @param word The word that we want to use as a phonetical filter.
+     * @return a list of words as a String
+     */
     public String search(String word){
         if (word.equals("")) {
             return "";
@@ -214,6 +227,6 @@ public class PhoneticTST {
         test.addWord("blouse");
         test.addWord("grouse");
         test.addWord("rouse");
-        System.out.println(test.search("mouse"));
+        System.out.println(test.search("house"));
     }
 }

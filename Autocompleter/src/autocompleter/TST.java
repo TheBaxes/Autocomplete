@@ -6,8 +6,9 @@
 package autocompleter;
 
 /**
- *
- * @author Baxes
+ * TST data structure for finding words in a list
+ * @author Sebastián Patiño Barrientos
+ * @author Luis Miguel Arroyave Quiñones
  */
 public class TST {
 
@@ -60,10 +61,17 @@ public class TST {
         }
     }
 
+    /**
+     * Constructor for the TST class
+     */
     public TST(){
         root = null;
     }
-
+    
+    /**
+     * This method nserts a word to the dictionary
+     * @param word The word that will be added to the dictionary
+     */
     public void addWord(String word){
         root = addWord(word, root);
     }
@@ -153,6 +161,11 @@ public class TST {
         return pivot;
     }
 
+    /**
+     * This method returns a list of words that starts with the given string 
+     * @param word The word that will be used to get the list of words 
+     * @return A list of words as a String
+     */
     public String autocomplete(String word){
         if (word.equals("")) {
             return "";
@@ -191,6 +204,10 @@ public class TST {
         }
     }
 
+    /**
+     * This method looks for a word in the TST
+     * @param word the wanted word
+     */
     public void modifySearch(String word){
         modifySearch(word, root);
     }
@@ -238,6 +255,7 @@ public class TST {
         return words;
     }
 
+   
     public static void main(String[] args){
         TST test = new TST();
         test.addWord("pew");
@@ -268,4 +286,5 @@ public class TST {
         test.modifySearch("potato");
         System.out.println(test.autocomplete("p"));
     }
+    
 }
