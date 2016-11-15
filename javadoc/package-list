@@ -2,4 +2,3 @@ autocompleter
 codec
 codec.binary
 codec.language
-org.apache.commons.codec.binary
