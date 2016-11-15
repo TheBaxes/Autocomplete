@@ -170,7 +170,7 @@ public class PhoneticTST {
         }
         String code = sound.metaphone(word);
         //int max = (code.length() <= 2) ? code.length() - 1 : 2;
-        int max = 1;
+        int max = 0;
         Scanner read = new Scanner(search(code, root, word, 0, max));
         TST order = new TST();
         while (read.hasNextLine()) {
