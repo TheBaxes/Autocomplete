@@ -5,7 +5,7 @@
  */
 package autocompleter;
 
-import codec.language.DoubleMetaphone;
+import codec.language.Metaphone;
 import java.util.Scanner;
 
 /**
@@ -13,31 +13,43 @@ import java.util.Scanner;
  * @author Baxes
  */
 public class PhoneticTST {
-    /** Root of the TST data structure */
+
+    /**
+     * Root of the TST data structure
+     */
     Node root;
-    DoubleMetaphone sound;
+    Metaphone sound;
 
     /**
      * Definition of the node class that will be used in this data structure
      */
     private class Node {
 
-        /** The character that will be contained in this node */
+        /**
+         * The character that will be contained in this node
+         */
         char letter;
 
-        /** If this is also an end node, this is the weight of the selected word */
+        /**
+         * If this is also an end node, this is the weight of the selected word
+         */
         List words;
 
-        /** Children of this node */
+        /**
+         * Children of this node
+         */
         Node left;
         Node middle;
         Node right;
 
-        /** Depth of this node for balancing it */
+        /**
+         * Depth of this node for balancing it
+         */
         int depth;
 
         /**
          * Constructor for the Node class
+         *
          * @param letter The character that will be asigned to this node
          */
         public Node(char letter){
@@ -54,12 +66,14 @@ public class PhoneticTST {
 
     public PhoneticTST(){
         root = null;
-        sound = new DoubleMetaphone();
+        sound = new Metaphone();
     }
 
     public void addWord(String word){
-        String code = sound.doubleMetaphone(word);
-        if (code != null) root = addWord(code, root, word);
+        String code = sound.metaphone(word);
+        if (code != null) {
+            root = addWord(code, root, word);
+        }
     }
 
     private Node addWord(String code, Node node, String word){
@@ -73,21 +87,23 @@ public class PhoneticTST {
 
             if (letter == node.letter){
                 node.middle = addWord(code.substring(1), node.middle, word);
-                if (code.length() == 1) {
-                    if (node.words == null) node.words = new List();
+                if (code.length() == 1){
+                    if (node.words == null) {
+                        node.words = new List();
+                    }
                     node.words.add(word);
                 }
             } else {
-                if (letter > node.letter) {
+                if (letter > node.letter){
                     node.right = addWord(code, node.right, word);
                 } else {
                     node.left = addWord(code, node.left, word);
                 }
 
                 int diff = getLeftDepth(node) - getRightDepth(node);
-                if (diff >= 2) {
+                if (diff >= 2){
                     node = rotateL(node);
-                } else if (diff <= -2) {
+                } else if (diff <= -2){
                     node = rotateR(node);
                 }
                 node.depth = Math.max(getLeftDepth(node), getRightDepth(node)) + 1;
@@ -99,14 +115,14 @@ public class PhoneticTST {
     }
 
     private int getRightDepth(Node node){
-        if (node.right == null) {
+        if (node.right == null){
             return 0;
         }
         return node.right.depth;
     }
 
     private int getLeftDepth(Node node){
-        if (node.left == null) {
+        if (node.left == null){
             return 0;
         }
         return node.left.depth;
@@ -114,7 +130,7 @@ public class PhoneticTST {
 
     private Node rotateL(Node root){
         Node pivot = root.left;
-        if (getLeftDepth(pivot) < getRightDepth(pivot)) {
+        if (getLeftDepth(pivot) < getRightDepth(pivot)){
             pivot = rotateLR(pivot);
         }
         root.left = pivot.right;
@@ -132,7 +148,7 @@ public class PhoneticTST {
 
     private Node rotateR(Node root){
         Node pivot = root.right;
-        if (getLeftDepth(pivot) > getRightDepth(pivot)) {
+        if (getLeftDepth(pivot) > getRightDepth(pivot)){
             pivot = rotateRL(pivot);
         }
         root.right = pivot.left;
@@ -149,8 +165,11 @@ public class PhoneticTST {
     }
 
     public String search(String word){
-        String code = sound.doubleMetaphone(word);
-        int max = (code.length() <= 2)? 1: 2;
+        if (word.equals("")) {
+            return "";
+        }
+        String code = sound.metaphone(word);
+        int max = (code.length() <= 2) ? code.length() - 1 : 2;
         Scanner read = new Scanner(search(code, root, word, 0, max));
         TST order = new TST();
         while (read.hasNextLine()) {
@@ -161,9 +180,9 @@ public class PhoneticTST {
 
     private String search(String code, Node node, String word, int edits, int max){
         String words = "";
-        
-        if (edits <= max) {
-            if (node.left != null) {
+
+        if (edits <= max){
+            if (node.left != null){
                 words += search(code, node.left, word, edits, max);
             }
 
@@ -175,11 +194,11 @@ public class PhoneticTST {
                 if (edits + add <= max && node.words != null){
                     words += node.words.getListWithout(word);
                 }
-            } else if (node.middle != null) {
+            } else if (node.middle != null){
                 words += search(code.substring(1), node.middle, word, edits + add, max);
             }
 
-            if (node.right != null) {
+            if (node.right != null){
                 words += search(code, node.right, word, edits, max);
             }
         }

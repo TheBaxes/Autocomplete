@@ -15,12 +15,13 @@ import java.util.Scanner;
  * @author Baxes
  */
 public class Autocompleter {
+
     static TST dictionary;
     static PhoneticTST phonetic;
-    
-    public static void readFile(String dir) {
-        try {
-            Scanner reader = new Scanner (new File(dir));
+
+    public static void readFile(String dir){
+        try{
+            Scanner reader = new Scanner(new File(dir));
             while (reader.hasNextLine()) {
                 String word = reader.nextLine();
                 dictionary.addWord(word);
@@ -43,10 +44,12 @@ public class Autocompleter {
         long end = System.currentTimeMillis();
         long time1 = end - start;
         //System.out.println(pew);
+        dictionary.modifySearch("mouseweb");
         start = System.currentTimeMillis();
-        pew = phonetic.search("mouse");
+        pew = dictionary.autocomplete("mouse");
+        //pew = phonetic.search("mouse");
         end = System.currentTimeMillis();
         System.out.println(pew + "time: " + time1 + " " + (end - start));
     }
-    
+
 }

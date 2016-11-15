@@ -85,20 +85,20 @@ public class TST {
 
             if (letter == node.letter){
                 node.middle = addWord(word.substring(1), node.middle);
-                if (word.length() == 1) {
+                if (word.length() == 1){
                     node.weight = 0;
                 }
             } else {
-                if (letter > node.letter) {
+                if (letter > node.letter){
                     node.right = addWord(word, node.right);
                 } else {
                     node.left = addWord(word, node.left);
                 }
 
                 int diff = getLeftDepth(node) - getRightDepth(node);
-                if (diff >= 2) {
+                if (diff >= 2){
                     node = rotateL(node);
-                } else if (diff <= -2) {
+                } else if (diff <= -2){
                     node = rotateR(node);
                 }
                 node.depth = Math.max(getLeftDepth(node), getRightDepth(node)) + 1;
@@ -110,14 +110,14 @@ public class TST {
     }
 
     private int getRightDepth(Node node){
-        if (node.right == null) {
+        if (node.right == null){
             return 0;
         }
         return node.right.depth;
     }
 
     private int getLeftDepth(Node node){
-        if (node.left == null) {
+        if (node.left == null){
             return 0;
         }
         return node.left.depth;
@@ -125,7 +125,7 @@ public class TST {
 
     private Node rotateL(Node root){
         Node pivot = root.left;
-        if (getLeftDepth(pivot) < getRightDepth(pivot)) {
+        if (getLeftDepth(pivot) < getRightDepth(pivot)){
             pivot = rotateLR(pivot);
         }
         root.left = pivot.right;
@@ -143,7 +143,7 @@ public class TST {
 
     private Node rotateR(Node root){
         Node pivot = root.right;
-        if (getLeftDepth(pivot) > getRightDepth(pivot)) {
+        if (getLeftDepth(pivot) > getRightDepth(pivot)){
             pivot = rotateRL(pivot);
         }
         root.right = pivot.left;
@@ -160,38 +160,42 @@ public class TST {
     }
 
     public String autocomplete(String word){
-        return autocomplete(word, "", root);
+        if (word.equals("")) {
+            return "";
+        }
+        SortTree list = new SortTree();
+        autocomplete(word, "", root, list);
+        return list.toString();
     }
 
-    private String autocomplete(String word, String back, Node node){
-        if (node == null) {
-            return "";
+    private void autocomplete(String word, String back, Node node, SortTree list){
+        if (node == null){
+            return;
         }
 
         if (word.length() < 1){
             StringBuilder text = new StringBuilder();
-            text.append(autocomplete("", back, node.left));
-            if (node.weight > -1) {
-                text.append(back + node.letter + "\n");
+            autocomplete("", back, node.left, list);
+            if (node.weight > -1){
+                list.add(back + node.letter, node.weight);
             }
-            text.append(autocomplete("", back + node.letter, node.middle));
-            text.append(autocomplete("", back, node.right));
-            return text.toString();
+            autocomplete("", back + node.letter, node.middle, list);
+            autocomplete("", back, node.right, list);
+            return;
         }
 
         char letter = word.charAt(0);
 
         if (letter == node.letter){
-            String extra = "";
-            if (word.length() == 1 && node.weight > -1) {
-                extra = back + letter + "\n";
+            if (word.length() == 1 && node.weight > -1){
+                list.add(back + letter, node.weight);
             }
-            return extra + autocomplete(word.substring(1), back + letter, node.middle);
-        } else if (letter > node.letter) {
-            return autocomplete(word, back, node.right);
+            autocomplete(word.substring(1), back + letter, node.middle, list);
+        } else if (letter > node.letter){
+            autocomplete(word, back, node.right, list);
+        } else {
+            autocomplete(word, back, node.left, list);
         }
-
-        return autocomplete(word, back, node.left);
     }
 
     public void modifySearch(String word){
@@ -209,9 +213,9 @@ public class TST {
             return 0;
         }
 
-        if (letter == node.letter) {
+        if (letter == node.letter){
             node.max = Math.max(node.max, modifySearch(word.substring(1), node.middle));
-        } else if (letter > node.letter) {
+        } else if (letter > node.letter){
             node.max = Math.max(node.max, modifySearch(word, node.right));
         } else {
             node.max = Math.max(node.max, modifySearch(word, node.left));
@@ -226,19 +230,21 @@ public class TST {
         int r = (node.right == null) ? 0 : node.right.max;
         return Math.max(Math.max(l, m), r);
     }
-   
-    public String toString() {
+
+    public String toString(){
         return toString(root, "");
     }
 
-    private String toString(Node node, String back) {
+    private String toString(Node node, String back){
         String words = "";
 
         if (node.left != null){
             words += toString(node.left, back);
         }
-        
-        if (node.weight > -1) words += back + "\n";
+
+        if (node.weight > -1) {
+            words += back + node.letter + "\n";
+        }
         if (node.middle != null){
             words += toString(node.middle, back + node.letter);
         }
@@ -248,6 +254,7 @@ public class TST {
         }
         return words;
     }
+
     public static void main(String[] args){
         TST test = new TST();
         test.addWord("pew");
@@ -273,6 +280,9 @@ public class TST {
         test.addWord("patata");
         test.addWord("ploafmoasdflweia");
 
+        test.modifySearch("potato");
+        test.modifySearch("piu");
+        test.modifySearch("potato");
         System.out.println(test.autocomplete("p"));
     }
 }
