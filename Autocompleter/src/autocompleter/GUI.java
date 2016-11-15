@@ -65,6 +65,11 @@ public class GUI extends javax.swing.JFrame {
                 jTextField1FocusGained(evt);
             }
         });
+        jTextField1.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jTextField1ActionPerformed(evt);
+            }
+        });
         jTextField1.addKeyListener(new java.awt.event.KeyAdapter() {
             public void keyReleased(java.awt.event.KeyEvent evt) {
                 jTextField1KeyReleased(evt);
@@ -100,7 +105,7 @@ public class GUI extends javax.swing.JFrame {
 
         jLabel1.setText("Tiempo de búsqueda:");
 
-        jLabel3.setText("En el modo normal las palabras se irán autocompletando a medida que escriber. Al activar la busqueda fonética, los resultados");
+        jLabel3.setText("En el modo normal las palabras se irán autocompletando a medida que escribes. Al activar la busqueda fonética, los resultados");
 
         jLabel4.setText("Tiempo de iniciación:");
 
@@ -134,7 +139,7 @@ public class GUI extends javax.swing.JFrame {
                             .addComponent(jLabel4, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                             .addComponent(jLabel5, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                             .addComponent(jButton1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))))
-                .addContainerGap(30, Short.MAX_VALUE))
+                .addContainerGap(29, Short.MAX_VALUE))
         );
         jPanel1Layout.setVerticalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -251,6 +256,10 @@ public class GUI extends javax.swing.JFrame {
         jTextField1.setText(selected);
         jTextField1.requestFocus();
     }//GEN-LAST:event_jList1MouseClicked
+
+    private void jTextField1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jTextField1ActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_jTextField1ActionPerformed
 
     private void search(){
         String result;
